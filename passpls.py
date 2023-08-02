@@ -172,10 +172,20 @@ if __name__ == "__main__":
                 if not is_ad_compliant(pw):
                     compliant_list.remove(pw)
             final_list = compliant_list
-        args.output.writelines(sorted(set(final_list)))
+        print("Generating passwords...")
+        try:
+            args.output.writelines(sorted(set(final_list)))
+        except:
+            print("Something went wrong with writing to file!")
+        print("Done!")
 
     # If there's only one modifier specified within hte command, process it as normal.
     elif len(args.modifiers) == 1:
         modified_passwords = modify_passwords(password_list, args.modifiers)
-        args.output.writelines(sorted(set("{}\n".format(pw) for pw in modified_passwords)))
+        print("Generating passwords...")
+        try:
+            args.output.writelines(sorted(set("{}\n".format(pw) for pw in modified_passwords)))
+        except:
+            print("Something went wrong with writing to file!")
+        print("Done!")
     args.output.close()
