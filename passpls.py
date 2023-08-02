@@ -149,6 +149,8 @@ if __name__ == "__main__":
         final_list = []
         # Create a dictionary of all possible combinations of the password list and modifiers selected.
         for modifier in args.modifiers:
+            if modifier == "w":
+                continue
             total_pass[modifier] = modify_passwords(password_list, modifier)
             args.modifiers.remove(modifier)
             for rem_mod in args.modifiers:
@@ -166,6 +168,7 @@ if __name__ == "__main__":
         final_list = set(final_list)
 
         # Check if AD compliant (if set)
+        print(args.modifiers)
         if "w" in args.modifiers:
             compliant_list = final_list.copy()
             for pw in final_list:
