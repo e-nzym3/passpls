@@ -141,7 +141,9 @@ def is_ad_compliant(password):
 
 if __name__ == "__main__":
     args = argument_handler()
-    password_list = args.input
+    if args.defaults and args.input:
+        password_list = args.input
+        password_list.extend(defaults)
     total_pass = {}
 
     # If there are multiple modifiers specified within the command, process them in a nested manner to generate the appropriate list of all requested permutations.
@@ -168,7 +170,6 @@ if __name__ == "__main__":
         final_list = set(final_list)
 
         # Check if AD compliant (if set)
-        print(args.modifiers)
         if "w" in args.modifiers:
             compliant_list = final_list.copy()
             for pw in final_list:
