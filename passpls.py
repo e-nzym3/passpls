@@ -144,6 +144,10 @@ if __name__ == "__main__":
     if args.defaults and args.input:
         password_list = args.input
         password_list.extend(defaults)
+    elif args.input:
+        password_list = args.input
+    else:
+        password_list = defaults
     total_pass = {}
 
     # If there are multiple modifiers specified within the command, process them in a nested manner to generate the appropriate list of all requested permutations.
