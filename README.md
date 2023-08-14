@@ -39,7 +39,8 @@ optional arguments:
                           c (common/default passwords), 
                           e (extended common/default passwords), 
                           m (months of the year).
-```
+  -l #, --length #      (Optional) Minimum passowrd length.
+  ```
 
 ### Example
 input_list.txt:
