@@ -67,6 +67,14 @@ def argument_handler():
         nargs="+",
         required=False
     )
+    parser.add_argument(
+        "-l",
+        "--length",
+        metavar="#",
+        help="(Optional) Minimum passowrd length.",
+        type=int,
+        required=False
+    )
     args = parser.parse_args()
 
     # Constructing a list of chosen default passwords.
@@ -149,10 +157,11 @@ if __name__ == "__main__":
     else:
         password_list = defaults
     total_pass = {}
+    final_list = []
 
     # If there are multiple modifiers specified within the command, process them in a nested manner to generate the appropriate list of all requested permutations.
     if len(args.modifiers) > 1:
-        final_list = []
+#        final_list = []
         # Create a dictionary of all possible combinations of the password list and modifiers selected.
         for modifier in args.modifiers:
             if modifier == "w":
@@ -170,7 +179,7 @@ if __name__ == "__main__":
         
         # Construct the final list of passwords
         for value in total_pass.values():
-            final_list.extend([("{}\n".format(pw)) for pw in value])
+            final_list.extend(value)
         final_list = set(final_list)
 
         # Check if AD compliant (if set)
@@ -181,19 +190,23 @@ if __name__ == "__main__":
                     compliant_list.remove(pw)
             final_list = compliant_list
         print("Generating passwords...")
-        try:
-            args.output.writelines(sorted(set(final_list)))
-        except:
-            print("Something went wrong with writing to file!")
-        print("Done!")
+
 
     # If there's only one modifier specified within hte command, process it as normal.
     elif len(args.modifiers) == 1:
-        modified_passwords = modify_passwords(password_list, args.modifiers)
-        print("Generating passwords...")
-        try:
-            args.output.writelines(sorted(set("{}\n".format(pw) for pw in modified_passwords)))
-        except:
-            print("Something went wrong with writing to file!")
-        print("Done!")
+        final_list = modify_passwords(password_list, args.modifiers)
+
+    # Apply the minimum length modifier
+    if args.length:
+        temp_list = list(final_list)
+        for pw in temp_list:
+            if len(pw) < args.length:
+                final_list.remove(pw)
+    
+    # Write the "final_list" constructed list of passwords to file.
+    try:
+        args.output.writelines(sorted(set("{}\n".format(pw) for pw in final_list)))
+    except:
+        print("Something went wrong with writing to file!")
+    print("Done!")
     args.output.close()
